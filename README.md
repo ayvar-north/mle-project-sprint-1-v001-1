@@ -17,6 +17,8 @@
 [Создание очищенной таблицы](part1_airflow/dags/clean_real_estate.py)<br>
 
 **Функции подготовки данных:**<br>
+[functions.ipynb](part1_airflow/notebooks/functions.ipynb)<br>
+
 **fill_missing_values()** заполняет пустые значения;<br>
 **remove_duplicates()** убирает дубликаты;<br>
 **remove_outliers()** убирает выбросы;<br>
