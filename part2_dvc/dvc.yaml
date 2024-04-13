@@ -1,0 +1,40 @@
+stages:
+  #Step 1:
+  get_data:
+    cmd: python scripts/data.py
+    deps: 
+      - scripts/data.py
+    params:
+      - index_col
+      - table_name
+    outs: 
+      - data/initial_data.csv
+
+  #Step 2:
+  fit_model:
+    cmd: python scripts/fit.py
+    deps:
+      - data/initial_data.csv
+      - scripts/fit.py
+    params:
+      - target_col
+      - drop_cols
+      - cat_cols
+      - one_hot_drop_bin
+      - one_hot_drop_cat
+    outs:
+      - models/fitted_model.pkl
+      
+  #Step 3:
+  evaluate_model:
+    cmd: python scripts/evaluate.py
+    deps:
+      - models/fitted_model.pkl
+      - scripts/evaluate.py
+    params:
+      - target_col
+      - n_splits
+      - n_jobs
+      - metrics
+    metrics:
+      - cv_results/cv_res.json

@@ -1,0 +1,80 @@
+schema: '2.0'
+stages:
+  get_data:
+    cmd: python scripts/data.py
+    deps:
+    - path: scripts/data.py
+      hash: md5
+      md5: 67c70db416a7cbb31fe2465ed2a1866b
+      size: 1528
+    params:
+      params.yaml:
+        index_col: flat_id
+        table_name: real_estate_clean
+    outs:
+    - path: data/initial_data.csv
+      hash: md5
+      md5: ea40882e73840d6a18d8af393f6cf2be
+      size: 13234705
+      cloud:
+        s3_storage:
+          etag: ea40882e73840d6a18d8af393f6cf2be
+          version_id: 000615EBD9CBECD4
+  fit_model:
+    cmd: python scripts/fit.py
+    deps:
+    - path: data/initial_data.csv
+      hash: md5
+      md5: ea40882e73840d6a18d8af393f6cf2be
+      size: 13234705
+    - path: scripts/fit.py
+      hash: md5
+      md5: 72a0bf08e92c36c1fdc43f1d0aab7a6a
+      size: 2511
+    params:
+      params.yaml:
+        cat_cols: []
+        drop_cols:
+        - id
+        - building_id
+        - flat_id
+        one_hot_drop_bin: if_binary
+        one_hot_drop_cat: first
+        target_col: price
+    outs:
+    - path: models/fitted_model.pkl
+      hash: md5
+      md5: 4745edb2164bf4503faa56ce80ea3104
+      size: 4718
+      cloud:
+        s3_storage:
+          etag: 4745edb2164bf4503faa56ce80ea3104
+          version_id: 000615EBD9C7136A
+  evaluate_model:
+    cmd: python scripts/evaluate.py
+    deps:
+    - path: models/fitted_model.pkl
+      hash: md5
+      md5: 4745edb2164bf4503faa56ce80ea3104
+      size: 4718
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: c445f6b12f53bcf9608b6557113a546e
+      size: 1439
+    params:
+      params.yaml:
+        metrics:
+        - neg_mean_squared_error
+        - r2
+        n_jobs: -1
+        n_splits: 5
+        target_col: price
+    outs:
+    - path: cv_results/cv_res.json
+      hash: md5
+      md5: 706b9ff4723bf18d1627f446c15c7c9a
+      size: 109
+      cloud:
+        s3_storage:
+          etag: 706b9ff4723bf18d1627f446c15c7c9a
+          version_id: 000615EC4F28702E
