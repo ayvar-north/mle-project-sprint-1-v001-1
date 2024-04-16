@@ -21,7 +21,6 @@ stages:
       - drop_cols
       - cat_cols
       - one_hot_drop
-      - one_hot_drop
     outs:
       - models/fitted_model.pkl
       
