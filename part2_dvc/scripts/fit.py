@@ -15,13 +15,6 @@ def fit_model():
     # Подгружаем гиперпараметры и другие настройки:
     with open('params.yaml', 'r') as fd:
          params = yaml.safe_load(fd)
-
-    one_hot_drop_bin = params['one_hot_drop_bin']
-    one_hot_drop_cat = params['one_hot_drop_cat']
-    target_col = params['target_col']
-    drop_cols = params['drop_cols']
-    cat_cols = params['cat_cols']
-
         
     data = pd.read_csv('data/initial_data.csv')
 
@@ -30,18 +23,18 @@ def fit_model():
     binary_cols = col_types[col_types == 'bool'].index.tolist()
     num_cols = col_types[(col_types == 'int64') | (col_types == 'float64')].index.tolist()
     # убираем лишние и категориальные столбцы из числовых, также убираем целевой признак:  
-    num_cols = [
-        i for i in num_cols 
-            if i not in cat_cols 
-                and i not in drop_cols 
-                and i not in target_col
-    ]
+    num_cols = list(
+        set(num_cols)
+        - set(params['cat_cols'])
+        - set(params['drop_cols'])
+        - set([params['target_col']])
+    )
 
    # Создаём пайплан из процессов предобработки данных и обучения модели:
     preprocessor = ColumnTransformer(
         [
-            ('binary', OneHotEncoder(drop=one_hot_drop_bin), binary_cols),
-            ('cat', OneHotEncoder(drop=one_hot_drop_cat), cat_cols),
+            ('binary', OneHotEncoder(drop=params['one_hot_drop']['binary']), binary_cols),
+            ('cat', OneHotEncoder(drop=params['one_hot_drop']['categorical']), params['cat_cols']),
             ('num', StandardScaler(), num_cols)
         ],
         remainder='drop',
@@ -56,7 +49,7 @@ def fit_model():
             ('model', model)
         ]
     )
-    pipeline.fit(data, data[target_col])
+    pipeline.fit(data, data[params['target_col']])
 
 	#  Сохраняем обученную модель в models/fitted_model.pkl
     os.makedirs('models', exist_ok=True) # создание директории, если её ещё нет

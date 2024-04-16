@@ -5,8 +5,8 @@ stages:
     deps:
     - path: scripts/data.py
       hash: md5
-      md5: 67c70db416a7cbb31fe2465ed2a1866b
-      size: 1528
+      md5: bb64dff68b4a519998e544185d7a49fe
+      size: 1501
     params:
       params.yaml:
         index_col: flat_id
@@ -14,23 +14,23 @@ stages:
     outs:
     - path: data/initial_data.csv
       hash: md5
-      md5: 7ee6d070320f69c81d9b37495384e033
-      size: 13234705
+      md5: 64da8c623e7bd964084ff1fefd9c70ed
+      size: 14098801
       cloud:
         my_storage:
-          etag: 7ee6d070320f69c81d9b37495384e033
-          version_id: 000615F435766D54
+          etag: 64da8c623e7bd964084ff1fefd9c70ed
+          version_id: 00061636A7CA030E
   fit_model:
     cmd: python scripts/fit.py
     deps:
     - path: data/initial_data.csv
       hash: md5
-      md5: 7ee6d070320f69c81d9b37495384e033
-      size: 13234705
+      md5: 64da8c623e7bd964084ff1fefd9c70ed
+      size: 14098801
     - path: scripts/fit.py
       hash: md5
-      md5: 72a0bf08e92c36c1fdc43f1d0aab7a6a
-      size: 2511
+      md5: c27e06327c752f09d2afe0d3571bb1cb
+      size: 2348
     params:
       params.yaml:
         cat_cols: []
@@ -38,43 +38,45 @@ stages:
         - id
         - building_id
         - flat_id
-        one_hot_drop_bin: if_binary
-        one_hot_drop_cat: first
+        one_hot_drop:
+          binary: if_binary
+          categorical: first
         target_col: price
     outs:
     - path: models/fitted_model.pkl
       hash: md5
-      md5: 274582c8cabee010c0095b496a338ecd
+      md5: 158aaec2832b5a9609e5f4032c694dcf
       size: 4718
       cloud:
         my_storage:
-          etag: 274582c8cabee010c0095b496a338ecd
-          version_id: 000615F43579DA05
+          etag: 158aaec2832b5a9609e5f4032c694dcf
+          version_id: 00061636A7C29724
   evaluate_model:
     cmd: python scripts/evaluate.py
     deps:
     - path: models/fitted_model.pkl
       hash: md5
-      md5: 274582c8cabee010c0095b496a338ecd
+      md5: 158aaec2832b5a9609e5f4032c694dcf
       size: 4718
     - path: scripts/evaluate.py
       hash: md5
-      md5: c445f6b12f53bcf9608b6557113a546e
-      size: 1439
+      md5: 9a6866c5fb18fde325b54d36e8ca782f
+      size: 1345
     params:
       params.yaml:
         metrics:
         - neg_mean_squared_error
         - r2
+        - neg_mean_absolute_percentage_error
         n_jobs: -1
         n_splits: 5
         target_col: price
     outs:
     - path: cv_results/cv_res.json
       hash: md5
-      md5: 40c0c54673de2f6861331cda75f63ffa
-      size: 109
+      md5: 0e733ea51dc2cf8a34386d59296a2705
+      size: 161
       cloud:
         my_storage:
-          etag: 40c0c54673de2f6861331cda75f63ffa
-          version_id: 000615F43579E808
+          etag: 0e733ea51dc2cf8a34386d59296a2705
+          version_id: 00061636A7BDE41A

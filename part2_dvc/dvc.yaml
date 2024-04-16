@@ -20,8 +20,8 @@ stages:
       - target_col
       - drop_cols
       - cat_cols
-      - one_hot_drop_bin
-      - one_hot_drop_cat
+      - one_hot_drop
+      - one_hot_drop
     outs:
       - models/fitted_model.pkl
       

@@ -12,10 +12,6 @@ def evaluate_model():
 	# прочитайте файл с гиперпараметрами params.yaml
     with open('params.yaml', 'r') as fd:
         params = yaml.safe_load(fd)
-    target_col = params['target_col']
-    n_splits = params['n_splits']
-    metrics = params['metrics']
-    n_jobs = params['n_jobs']
 
 	# загрузите результат прошлого шага: fitted_model.pkl
     with open('models/fitted_model.pkl', 'rb') as fd:
@@ -27,10 +23,10 @@ def evaluate_model():
     cv_res = cross_validate(
         model,
         data,
-        data[target_col],
-        cv=n_splits,
-        n_jobs=n_jobs,
-        scoring=metrics
+        data[params['target_col']],
+        cv=params['n_splits'],
+        n_jobs=params['n_jobs'],
+        scoring=params['metrics']
         )
     
     for key, value in cv_res.items():

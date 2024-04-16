@@ -4,8 +4,7 @@ target_col: 'price'
 drop_cols: ['id', 'building_id', 'flat_id']
 # cat_cols: ['rooms', 'building_type_int']
 cat_cols: []
-one_hot_drop_bin: 'if_binary'
-one_hot_drop_cat: 'first'
+one_hot_drop: {'binary':'if_binary', 'categorical':'first'}
 n_splits: 5
-metrics: ['neg_mean_squared_error', 'r2']
+metrics: ['neg_mean_squared_error', 'r2' , 'neg_mean_absolute_percentage_error']
 n_jobs: -1

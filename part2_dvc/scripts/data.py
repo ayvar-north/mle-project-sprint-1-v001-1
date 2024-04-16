@@ -26,12 +26,12 @@ def get_data():
     # 3.1 — загрузка гиперпараметров
     with open('params.yaml', 'r') as fd:
         params = yaml.safe_load(fd)
-    table_name = params['table_name']
+
     # 3.2 — загрузки предыдущих результатов нет, так как это первый шаг
 
     # 3.3 — основная логика
     conn = create_connection()
-    data = pd.read_sql(f"select * from {table_name}", conn, index_col=params['index_col'])
+    data = pd.read_sql(f"select * from {params['table_name']}", conn, index_col=params['index_col'])
     conn.dispose()
 
     # 3.4 — сохранение результата шага
